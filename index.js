@@ -5,20 +5,17 @@ import {getDurationString} from "./calculate-duration.js"
 
 
 
+  // Is important to know the IFC data type to be used in each entity attribute.
+   // In the case of the Name attribute, the IFC data type is IfcLabel.
+  // You can know the data types by looking at the specific IFC entity documentation.
 // We're using the file system API to read the schedule.csv as an string
 const csvData = fs.readFileSync("./src/schedule.csv", { encoding: "utf-8" })
 // Then, the CSV string is converted into the object shown in the picture above
 const data = transformCsv(csvData)
 
-
-
-
 // Export the data object to a JSON file
 const jsonData = JSON.stringify(data, null, 2) // Pretty print with 2 spaces
 fs.writeFileSync("./src/data.json", jsonData, { encoding: "utf-8" })
-
-
-
 
 const IFC = new WEBIFC.IfcAPI()
 await IFC.Init()
@@ -56,10 +53,7 @@ const newExpressID = () => {
   return IFC.GetMaxExpressID(modelID) + 1
 
 }
-const getExpressID = () => {
-  return IFC.GetMaxExpressID(modelID)
 
-}
 
 // New entities created must be explicitly save inside the IFC file.
 // This function takes an entity, gives it a new expressID based on the last found
@@ -71,26 +65,15 @@ const saveEntity = (entity) => {
 
 // The input data is just one row from the converted CSV information.
 // Take a look at the video for more context about this.
- const newTask = (data) => {
+const newTask = (data) => {
 
-  //7 
-  const { Name, Description, Identification, Time: IfcTaskTime} = data
+  const { Name, Description, Identification, Start, Finish, Time } = data;
 
-
-    // Is important to know the IFC data type to be used in each entity attribute.
-    // In the case of the Name attribute, the IFC data type is IfcLabel.
-    // You can know the data types by looking at the specific IFC entity documentation.
     const name = Name ? new WEBIFC.IFC4X3.IfcLabel(Name) : null
     const description = Description ? new WEBIFC.IFC4X3.IfcText(Description) : null
     const identification = Identification ? new WEBIFC.IFC4X3.IfcIdentifier(Identification) : null
-
-    //7
-
-    
     const taskTimeAttrb = Time ? new WEBIFC.Handle(Time.expressID) : null
 
-
-    //8
     const task = new WEBIFC.IFC4X3.IfcTask(
       newGUID(),
       getOwnerHistoryHandle(),
@@ -118,19 +101,18 @@ const processTaskData = (task, ifcRel) => {
   const { data, children } = task
   // definerar ny variabel baserat på kolumnerna till "data"
   const { ID, Name, Description, Start, Finish } = data
-  
+
   // taskVariabel
-  //1
   let taskDuration = null
-  //2
+
   if(Start && Finish) {
     const duration =  getDurationString(Start, Finish)
-    // 3 funktionen innehåller variabeln  duration med resultat i format PnYnMnDTnHnMnS (ISO 8601)
-    const durationFormat = `P${duration.years}Y${duration.months}M${duration.days}DT${duration.hours}H${duration.minutes}M${duration.seconds}S`
-    taskDuration = new WEBIFC.IFC4X3.IfcDuration(durationFormat)
+    console.log(duration)
+    //  funktionen innehåller variabeln  duration med resultat i format PnYnMnDTnHnMnS (ISO 8601)
+    taskDuration = new WEBIFC.IFC4X3.IfcDuration(duration)
     
   }
-//4
+
   const IfcTaskTime  = new WEBIFC.IFC4X3.IfcTaskTime(
     null,
     null,
@@ -156,6 +138,7 @@ if (ifcRel) {
   IFC.WriteLine(modelID, ifcRel)
 }
 
+//kolla om det finns children (större än 1 task)
 if (children && children.length !== 0) {
   const taskNests = new WEBIFC.IFC4X3.IfcRelNests(
     newGUID(),
