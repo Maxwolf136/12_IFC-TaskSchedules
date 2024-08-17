@@ -1,0 +1,321 @@
+[
+  {
+    "data": {
+      "ID": "1",
+      "Name": "Site Preparation",
+      "Description": "Clear the site and set up initial facilities",
+      "Start": "2024-01-01",
+      "Finish": "2024-01-10"
+    },
+    "children": [
+      {
+        "data": {
+          "ID": "1.1",
+          "Name": "Survey and Marking",
+          "Description": "Survey the site and mark the boundaries",
+          "Start": "2024-01-01",
+          "Finish": "2024-01-02"
+        }
+      },
+      {
+        "data": {
+          "ID": "1.2",
+          "Name": "Excavation",
+          "Description": "Excavate the foundation area",
+          "Start": "2024-01-03",
+          "Finish": "2024-01-06"
+        },
+        "children": [
+          {
+            "data": {
+              "ID": "1.2.1",
+              "Name": "Topsoil Removal",
+              "Description": "Remove topsoil and vegetation",
+              "Start": "2024-01-03",
+              "Finish": "2024-01-04"
+            }
+          },
+          {
+            "data": {
+              "ID": "1.2.2",
+              "Name": "Trench Digging",
+              "Description": "Dig trenches for foundation",
+              "Start": "2024-01-05",
+              "Finish": "2024-01-06"
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "ID": "1.3",
+          "Name": "Temporary Facilities",
+          "Description": "Set up temporary office and storage areas",
+          "Start": "2024-01-07",
+          "Finish": "2024-01-10"
+        }
+      }
+    ]
+  },
+  {
+    "data": {
+      "ID": "2",
+      "Name": "Foundation",
+      "Description": "Build the foundation of the building",
+      "Start": "2024-01-11",
+      "Finish": "2024-01-25"
+    },
+    "children": [
+      {
+        "data": {
+          "ID": "2.1",
+          "Name": "Footings",
+          "Description": "Construct the footings",
+          "Start": "2024-01-11",
+          "Finish": "2024-01-15"
+        },
+        "children": [
+          {
+            "data": {
+              "ID": "2.1.1",
+              "Name": "Rebar Placement",
+              "Description": "Place rebar for footings",
+              "Start": "2024-01-11",
+              "Finish": "2024-01-12"
+            }
+          },
+          {
+            "data": {
+              "ID": "2.1.2",
+              "Name": "Concrete Pouring",
+              "Description": "Pour concrete for footings",
+              "Start": "2024-01-13",
+              "Finish": "2024-01-15"
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "ID": "2.2",
+          "Name": "Foundation Walls",
+          "Description": "Build the foundation walls",
+          "Start": "2024-01-16",
+          "Finish": "2024-01-20"
+        }
+      },
+      {
+        "data": {
+          "ID": "2.3",
+          "Name": "Backfilling",
+          "Description": "Backfill around the foundation",
+          "Start": "2024-01-21",
+          "Finish": "2024-01-25"
+        }
+      }
+    ]
+  },
+  {
+    "data": {
+      "ID": "3",
+      "Name": "Superstructure",
+      "Description": "Construct the main structure of the building",
+      "Start": "2024-01-26",
+      "Finish": "2024-02-28"
+    },
+    "children": [
+      {
+        "data": {
+          "ID": "3.1",
+          "Name": "Columns and Beams",
+          "Description": "Install columns and beams",
+          "Start": "2024-01-26",
+          "Finish": "2024-02-10"
+        },
+        "children": [
+          {
+            "data": {
+              "ID": "3.1.1",
+              "Name": "Column Rebar",
+              "Description": "Install rebar for columns",
+              "Start": "2024-01-26",
+              "Finish": "2024-01-30"
+            }
+          },
+          {
+            "data": {
+              "ID": "3.1.2",
+              "Name": "Beam Formwork",
+              "Description": "Set up formwork for beams",
+              "Start": "2024-02-01",
+              "Finish": "2024-02-05"
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "ID": "3.2",
+          "Name": "Floor Slabs",
+          "Description": "Pour the concrete floor slabs",
+          "Start": "2024-02-11",
+          "Finish": "2024-02-20"
+        }
+      },
+      {
+        "data": {
+          "ID": "3.3",
+          "Name": "Roof Structure",
+          "Description": "Construct the roof structure",
+          "Start": "2024-02-21",
+          "Finish": "2024-02-28"
+        }
+      }
+    ]
+  },
+  {
+    "data": {
+      "ID": "4",
+      "Name": "Exterior",
+      "Description": "Complete the exterior of the building",
+      "Start": "2024-03-01",
+      "Finish": "2024-03-31"
+    },
+    "children": [
+      {
+        "data": {
+          "ID": "4.1",
+          "Name": "Wall Framing",
+          "Description": "Frame the exterior walls",
+          "Start": "2024-03-01",
+          "Finish": "2024-03-10"
+        }
+      },
+      {
+        "data": {
+          "ID": "4.2",
+          "Name": "Windows and Doors",
+          "Description": "Install windows and doors",
+          "Start": "2024-03-11",
+          "Finish": "2024-03-20"
+        }
+      },
+      {
+        "data": {
+          "ID": "4.3",
+          "Name": "Exterior Finishing",
+          "Description": "Apply exterior finishes",
+          "Start": "2024-03-21",
+          "Finish": "2024-03-31"
+        }
+      }
+    ]
+  },
+  {
+    "data": {
+      "ID": "5",
+      "Name": "Interior",
+      "Description": "Complete the interior of the building",
+      "Start": "2024-04-01",
+      "Finish": "2024-04-30"
+    },
+    "children": [
+      {
+        "data": {
+          "ID": "5.1",
+          "Name": "Wall and Ceiling Framing",
+          "Description": "Frame interior walls and ceilings",
+          "Start": "2024-04-01",
+          "Finish": "2024-04-10"
+        },
+        "children": [
+          {
+            "data": {
+              "ID": "5.1.1",
+              "Name": "Interior Wall Framing",
+              "Description": "Frame interior partition walls",
+              "Start": "2024-04-01",
+              "Finish": "2024-04-05"
+            }
+          },
+          {
+            "data": {
+              "ID": "5.1.2",
+              "Name": "Ceiling Joists",
+              "Description": "Install ceiling joists",
+              "Start": "2024-04-06",
+              "Finish": "2024-04-10"
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "ID": "5.2",
+          "Name": "Electrical and Plumbing",
+          "Description": "Install electrical and plumbing systems",
+          "Start": "2024-04-11",
+          "Finish": "2024-04-20"
+        }
+      },
+      {
+        "data": {
+          "ID": "5.3",
+          "Name": "Interior Finishes",
+          "Description": "Install interior finishes",
+          "Start": "2024-04-21",
+          "Finish": "2024-04-30"
+        }
+      }
+    ]
+  },
+  {
+    "data": {
+      "ID": "6",
+      "Name": "Final Inspection and Handover",
+      "Description": "Inspect and hand over the completed building",
+      "Start": "2024-05-01",
+      "Finish": "2024-05-10"
+    },
+    "children": [
+      {
+        "data": {
+          "ID": "6.1",
+          "Name": "Final Inspection",
+          "Description": "Conduct final inspection and address issues",
+          "Start": "2024-05-01",
+          "Finish": "2024-05-05"
+        },
+        "children": [
+          {
+            "data": {
+              "ID": "6.1.1",
+              "Name": "Inspection Punch List",
+              "Description": "Create punch list of issues",
+              "Start": "2024-05-01",
+              "Finish": "2024-05-02"
+            }
+          },
+          {
+            "data": {
+              "ID": "6.1.2",
+              "Name": "Issue Resolution",
+              "Description": "Address punch list issues",
+              "Start": "2024-05-03",
+              "Finish": "2024-05-05"
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "ID": "6.2",
+          "Name": "Handover",
+          "Description": "Hand over the completed building to the owner",
+          "Start": "2024-05-06",
+          "Finish": "2024-05-10"
+        }
+      }
+    ]
+  }
+]
