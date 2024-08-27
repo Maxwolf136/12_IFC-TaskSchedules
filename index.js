@@ -83,8 +83,10 @@ const newTask = (data) => {
       identification,
       null,
       null,
+      null,
+      new WEBIFC.IFC4X3.IfcBoolean(false),
+      null,
       taskTimeAttrb,
-      new WEBIFC.IFC4X3.IfcBoolean(false)
     )
   
     // Here we use the function to save the entity in the file.
@@ -92,7 +94,6 @@ const newTask = (data) => {
 
     return task
 }
-
 
 
 
@@ -199,7 +200,9 @@ const controlRel = new WEBIFC.IFC4X3.IfcRelAssignsToControl(
     null,
     [new WEBIFC.Handle(summaryTask.expressID)],
     null,
-    new WEBIFC.Handle(schedule.expressID)
+    new WEBIFC.Handle(schedule.expressID),
+    null,
+    null,
 )
   
   saveEntity(controlRel)
@@ -221,4 +224,3 @@ const controlRel = new WEBIFC.IFC4X3.IfcRelAssignsToControl(
 
   const outputIfc = IFC.SaveModel(modelID)
   fs.writeFileSync("structure_Schedule1.ifc", outputIfc)
-
