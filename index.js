@@ -13,13 +13,44 @@ const csvData = fs.readFileSync("./src/schedule.csv", { encoding: "utf-8" })
 // Then, the CSV string is converted into the object shown in the picture above
 const data = transformCsv(csvData)
 
+
+
+
+
+function collectStartDates(tasks) {
+  let startDates = [];
+
+  function traverse(task) {
+    if (task.data && task.data.Start) {
+      startDates.push(new Date(task.data.Start));
+    }
+    if (task.children) {
+      task.children.forEach(traverse);
+    }
+  }
+
+  tasks.forEach(traverse);
+  return startDates;
+}
+
+const startDates = collectStartDates(data);
+const earliestDate = new Date(Math.min(...startDates));
+
+console.log(`The earliest start date is:${earliestDate.toISOString()}`);
+
+const convertTostring = earliestDate.toISOString().split('T')[0]
+
+
+
+
 // Export the data object to a JSON file
 const jsonData = JSON.stringify(data, null, 2) // Pretty print with 2 spaces
 fs.writeFileSync("./src/data.json", jsonData, { encoding: "utf-8" })
 
+// IFC READ
 const IFC = new WEBIFC.IfcAPI()
 await IFC.Init()
-const inputIfc = fs.readFileSync("./ifc-files/K-P_4.ifc")
+const inputIfc = fs.readFileSync("./ifc-files/01-IFC4.ifc")
 const modelID = IFC.OpenModel(inputIfc)
 
 // Most entities need a reference to the global IfcOwnerHistory entity.
@@ -46,7 +77,7 @@ const getProjectHandle = () => {
 // Most entities in the schema requires a GUID.
 // This function just creates a random IfcGloballyUniqueId to be used in new entities.
 const newGUID = () => {
-  return new WEBIFC.IFC4X3.IfcGloballyUniqueId(crypto.randomUUID())
+  return new WEBIFC.IFC4.IfcGloballyUniqueId(crypto.randomUUID())
 }
 
 const newExpressID = () => {
@@ -66,15 +97,14 @@ const saveEntity = (entity) => {
 // The input data is just one row from the converted CSV information.
 // Take a look at the video for more context about this.
 const newTask = (data) => {
-
   const { Name, Description, Identification, Start, Finish, Time } = data;
 
-    const name = Name ? new WEBIFC.IFC4X3.IfcLabel(Name) : null
-    const description = Description ? new WEBIFC.IFC4X3.IfcText(Description) : null
-    const identification = Identification ? new WEBIFC.IFC4X3.IfcIdentifier(Identification) : null
+    const name = Name ? new WEBIFC.IFC4.IfcLabel(Name) : null
+    const description = Description ? new WEBIFC.IFC4.IfcText(Description) : null
+    const identification = Identification ? new WEBIFC.IFC4.IfcIdentifier(Identification) : null
     const taskTimeAttrb = Time ? new WEBIFC.Handle(Time.expressID) : null
 
-    const task = new WEBIFC.IFC4X3.IfcTask(
+    const task = new WEBIFC.IFC4.IfcTask(
       newGUID(),
       getOwnerHistoryHandle(),
       name,
@@ -84,17 +114,15 @@ const newTask = (data) => {
       null,
       null,
       null,
-      new WEBIFC.IFC4X3.IfcBoolean(false),
+      new WEBIFC.IFC4.IfcBoolean(false),
       null,
       taskTimeAttrb,
     )
-  
     // Here we use the function to save the entity in the file.
     saveEntity(task)
 
     return task
 }
-
 
 
 const processTaskData = (task, ifcRel) => {
@@ -108,20 +136,21 @@ const processTaskData = (task, ifcRel) => {
 
   if(Start && Finish) {
     const duration =  getDurationString(Start, Finish)
-    console.log(duration)
+    // console.log(duration)
     //  funktionen innehåller variabeln  duration med resultat i format PnYnMnDTnHnMnS (ISO 8601)
-    taskDuration = new WEBIFC.IFC4X3.IfcDuration(duration)
-    
+    taskDuration = new WEBIFC.IFC4.IfcDuration(duration)
   }
 
-  const IfcTaskTime  = new WEBIFC.IFC4X3.IfcTaskTime(
+
+
+  const IfcTaskTime  = new WEBIFC.IFC4.IfcTaskTime(
     null,
     null,
     null,
     null,
     taskDuration,
-    Start? new WEBIFC.IFC4X3.IfcDateTime(Start) : null,
-    Finish? new WEBIFC.IFC4X3.IfcDateTime(Finish) : null,
+    Start? new WEBIFC.IFC4.IfcDateTime(Start) : null,
+    Finish? new WEBIFC.IFC4.IfcDateTime(Finish) : null,
   )
   //5
   saveEntity(IfcTaskTime)
@@ -141,7 +170,7 @@ if (ifcRel) {
 
 //kolla om det finns children (större än 1 task)
 if (children && children.length !== 0) {
-  const taskNests = new WEBIFC.IFC4X3.IfcRelNests(
+  const taskNests = new WEBIFC.IFC4.IfcRelNests(
     newGUID(),
     null,
     null,
@@ -164,7 +193,7 @@ const summaryTask = newTask({ Name: "Summary" })
 
 // This relation is to hold together all first-level tasks with the
 // summary tasks, as denoted by the IFC schema.
-const summaryTaskNests = new WEBIFC.IFC4X3.IfcRelNests(
+const summaryTaskNests = new WEBIFC.IFC4.IfcRelNests(
   newGUID(),
   getOwnerHistoryHandle(),
   null,
@@ -182,45 +211,60 @@ for (const task of data) {
   processTaskData(task, summaryTaskNests)
 }
 
-// The schedule in the IFC schema is denoted by the IfcWorkSchedule entity.
-const schedule = new WEBIFC.IFC4X3.IfcWorkSchedule(
+
+
+const workschedule = new WEBIFC.IFC4.IfcWorkSchedule(
     newGUID(),
     getOwnerHistoryHandle(),
-    new WEBIFC.IFC4X3.IfcLabel("Planned Schedule")
-  )
-  
-  saveEntity(schedule)
+    new WEBIFC.IFC4.IfcLabel("Planned Schedule"),
+    null,
+    null,
+    null,
+    convertTostring ? new WEBIFC.IFC4.IfcDateTime(convertTostring) : null,
+    null,
+    null,
+    null,
+    null,
+    convertTostring ? new WEBIFC.IFC4.IfcDateTime(convertTostring) : null,
+    null,
+    ".PLANNED",
+)
+    saveEntity(workschedule)
+    console.log(workschedule)
+
+
+
+// The schedule in the IFC schema is denoted by the IfcWorkSchedule entity.
   
   // A relation of type IfcRelAssignsToControl is needed to tell the schedule
   // controls the summary tasks (and, consequently, all the schedule tasks)
-const controlRel = new WEBIFC.IFC4X3.IfcRelAssignsToControl(
+const controlRel = new WEBIFC.IFC4.IfcRelAssignsToControl(
     newGUID(),
     getOwnerHistoryHandle(),
     null,
     null,
     [new WEBIFC.Handle(summaryTask.expressID)],
     null,
-    new WEBIFC.Handle(schedule.expressID),
+    new WEBIFC.Handle(workschedule.expressID),
     null,
     null,
-)
+  )
   
   saveEntity(controlRel)
 
   const projectHandle = getProjectHandle()
   if (projectHandle) {
-    const declaresRel = new WEBIFC.IFC4X3.IfcRelDeclares(
+    const declaresRel = new WEBIFC.IFC4.IfcRelDeclares(
       newGUID(),
       getOwnerHistoryHandle(),
       null,
       null,
       projectHandle,
-      [new WEBIFC.Handle(schedule.expressID)]
+      [new WEBIFC.Handle(workschedule.expressID)]
     )
-
     saveEntity(declaresRel)
   }
 
 
   const outputIfc = IFC.SaveModel(modelID)
-  fs.writeFileSync("structure_Schedule1.ifc", outputIfc)
+  fs.writeFileSync("01-IFC4-Tasktime.ifc", outputIfc)
